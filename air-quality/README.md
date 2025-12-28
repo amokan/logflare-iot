@@ -1,7 +1,17 @@
 # Air Quality Sensor Integration With Logflare
 
 DIY home air quality sensor using [Logflare](https://logflare.app) as a backend for data storage and visualization.
+
 The core device is built around commodity hardware from [Adafruit](https://www.adafruit.com) for simplicity.
+
+![Air Quality Device](../media/air_quality_device_01.png)
+*Example showing the hardware*
+
+
+![Logflare Dashboard](../media/logflare_screenshot_01.png)
+*Logflare Dashboard Showing PM2.5 values aggregated per minute*
+
+----
 
 ## Hardware
 
