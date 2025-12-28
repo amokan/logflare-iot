@@ -1,0 +1,23 @@
+# set your wifi credentials
+CIRCUITPY_WIFI_SSID = "some_ssid"
+CIRCUITPY_WIFI_PASSWORD = "some_password"
+
+# set your logflare api key
+LOGFLARE_API_KEY = "some_api_key"
+LOGFLARE_SOURCE_ID = "some_uuid"
+
+# sets the device location (default, kitchen, bedroom, etc.)
+DEVICE_LOCATION = "default"
+
+# environment type: "indoor" or "outdoor"
+# indoor uses standard concentration readings, outdoor uses environmental readings
+DEVICE_ENVIRONMENT = "indoor"
+
+# reading interval in seconds
+READING_INTERVAL = "10"
+
+# display units: "metric" (Celsius, hPa) or "imperial" (Fahrenheit, inHg)
+DISPLAY_UNITS = "imperial"
+
+# optional SPA06-003 temperature/pressure sensor ("true"/"false")
+ENABLE_SPA06 = "false"
