@@ -1,6 +1,6 @@
 # Air Quality Sensor Integration With Logflare
 
-DIY home air quality sensor using [Logflare](https://logflare.app) as a backend for data storage and visualization.
+DIY home air quality sensor using [Logflare](https://logflare.app) as a backend for data storage and visualization using commodity hardware from Adafruit for simplicity.
 
 ## Hardware
 
@@ -16,7 +16,7 @@ DIY home air quality sensor using [Logflare](https://logflare.app) as a backend 
 
 ### Documentation
 
-- [https://docs.circuitpython.org/en/10.0.3/](https://docs.circuitpython.org/en/10.0.3/README.html)
+- [CircuitPython v10.0.3 Docs](https://docs.circuitpython.org/en/10.0.3/README.html)
   - [Core Modules](https://docs.circuitpython.org/en/10.0.3/shared-bindings/index.html)
   - [Standard Libraries](https://docs.circuitpython.org/en/10.0.3/docs/library/index.html)
 
