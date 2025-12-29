@@ -223,7 +223,8 @@ def main():
         return
 
     # Initial WiFi connection
-    print(f"MAC address: {[hex(i) for i in wifi.radio.mac_address]}")
+    device_mac = ":".join(f"{b:02x}" for b in wifi.radio.mac_address)
+    print(f"MAC address: {device_mac}")
     if not connect_wifi(wifi_label):
         show_error(display, "WiFi connection failed")
         return
@@ -257,6 +258,7 @@ def main():
 
     # Log device startup
     startup_metadata = {
+        "mac_address": device_mac,
         "config": {
             "wifi_ssid": WIFI_SSID,
             "device_location": DEVICE_LOCATION,
@@ -318,6 +320,7 @@ def main():
         # Send to Logflare
         event_message = f"Air quality reading from '{DEVICE_LOCATION}'"
         metadata = {
+            "mac_address": device_mac,
             "location": DEVICE_LOCATION,
             "status": status_text,
             "pm10": pm10_val,    # PM1.0
