@@ -43,8 +43,6 @@ Copy the following library files/directories to the `/lib` directory on the boar
   - `adafruit_pm25/`
   - `adafruit_register/`
   - `adafruit_connection_manager.mpy`
-  - `adafruit_ntp.mpy`
-  - `adafruit_requests.mpy`
   - `adafruit_spa06_003.mpy` (_Optional, if using the SPA06-003 temperature / pressure sensor_)
 
 ### Code

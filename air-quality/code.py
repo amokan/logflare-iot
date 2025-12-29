@@ -3,7 +3,6 @@ import os
 import ssl
 import time
 
-import adafruit_requests
 import board
 import busio
 import displayio
@@ -13,13 +12,6 @@ import wifi
 from adafruit_display_text import label
 from adafruit_pm25.i2c import PM25_I2C
 from logflare import LogflareClient
-
-# Optional NTP support for device-side timestamps
-try:
-    import adafruit_ntp
-    NTP_AVAILABLE = True
-except ImportError:
-    NTP_AVAILABLE = False
 
 # Load environment variables into globals at startup
 WIFI_SSID = os.getenv("CIRCUITPY_WIFI_SSID")
@@ -57,15 +49,6 @@ def get_air_quality(pm25_value):
 def celsius_to_fahrenheit(celsius):
     """Convert Celsius to Fahrenheit."""
     return (celsius * 9 / 5) + 32
-
-
-def get_iso_timestamp(ntp):
-    """Get current time as ISO 8601 string from NTP."""
-    try:
-        dt = ntp.datetime
-        return f"{dt.tm_year}-{dt.tm_mon:02d}-{dt.tm_mday:02d}T{dt.tm_hour:02d}:{dt.tm_min:02d}:{dt.tm_sec:02d}Z"
-    except Exception:
-        return None
 
 
 def hpa_to_inhg(hpa):
@@ -245,23 +228,14 @@ def main():
         show_error(display, "WiFi connection failed")
         return
 
-    # Setup HTTP session and NTP
+    # Setup socket pool and SSL context
     pool = socketpool.SocketPool(wifi.radio)
     ssl_context = ssl.create_default_context()
-    requests = adafruit_requests.Session(pool, ssl_context)
-
-    # Initialize NTP for device-side timestamps (optional)
-    ntp = None
-    if NTP_AVAILABLE:
-        try:
-            ntp = adafruit_ntp.NTP(pool, tz_offset=0)
-            print(f"NTP time: {get_iso_timestamp(ntp)}")
-        except Exception as e:
-            print(f"NTP init failed: {e}")
 
     # Initialize Logflare client
     logflare = LogflareClient(
-        requests_session=requests,
+        socket_pool=pool,
+        ssl_context=ssl_context,
         api_key=LOGFLARE_API_KEY,
         source_id=LOGFLARE_SOURCE_ID,
     )
@@ -292,14 +266,8 @@ def main():
             "spa06_enabled": ENABLE_SPA06,
         },
     }
-    startup_time = get_iso_timestamp(ntp) if ntp else None
-    if startup_time:
-        startup_metadata["device_timestamp"] = startup_time
-    logflare.send(f"Air quality device starting in '{DEVICE_LOCATION}'", startup_metadata, timestamp=startup_time)
+    logflare.send(f"Air quality device starting in '{DEVICE_LOCATION}'", startup_metadata)
     print("Starting air quality monitoring...")
-
-    # Sequence number to track duplicate requests
-    seq = 0
 
     while True:
         loop_start = time.monotonic()
@@ -371,15 +339,6 @@ def main():
             },
         }
 
-        # Add device timestamp if NTP available
-        device_time = get_iso_timestamp(ntp) if ntp else None
-        if device_time:
-            metadata["device_timestamp"] = device_time
-
-        # Add sequence number to track duplicates
-        seq += 1
-        metadata["http_seq_id"] = seq
-
         # Add temperature/pressure if available
         if temperature is not None:
             metadata["temperature_c"] = round(temperature, 1)
@@ -388,7 +347,7 @@ def main():
             metadata["pressure_hpa"] = round(pressure, 1)
             metadata["pressure_inhg"] = round(hpa_to_inhg(pressure), 2)
 
-        if logflare.send(event_message, metadata, timestamp=device_time):
+        if logflare.send(event_message, metadata):
             print(f"Logged: PM2.5={pm25_val} ({status_text})")
         else:
             print("Failed to send to Logflare")
