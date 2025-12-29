@@ -19,7 +19,7 @@ The core device is built around commodity hardware from [Adafruit](https://www.a
   - [Overview](https://learn.adafruit.com/esp32-s2-reverse-tft-feather)
 - [Adafruit PMSA003I Air Quality Breakout](https://www.adafruit.com/product/4632)
 - [STEMMA QT / Qwiic JST SH 4-Pin Cable](https://www.adafruit.com/product/4399)
-- [Adafruit SPA06-003 Temperature + Pressure Sensor](https://www.adafruit.com/product/6420) (Optional)
+- [Adafruit SPA06-003 Temperature + Pressure Sensor](https://www.adafruit.com/product/6420) (_Optional_)
 
 ## CircuitPython
 
